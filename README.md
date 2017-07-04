@@ -1,5 +1,5 @@
 # Joint Probabilistic Data Association Tracking (JPDAFTracker)
-JPDAFTracker is tracker based on joint probabilistic data association filtering.
+JPDAFTracker is a tracker based on joint probabilistic data association filtering.
 
 <p align="center">
 <a href="https://www.youtube.com/watch?v=KlXpaKh8hDY"  target="_blank"><img src="https://img.youtube.com/vi/KlXpaKh8hDY/0.jpg"/></a>

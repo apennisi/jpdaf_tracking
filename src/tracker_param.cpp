@@ -4,7 +4,7 @@
 
 using namespace JPDAFTracker;
 
-void TrackerParam::read(const std::__cxx11::string& filename)
+void TrackerParam::read(const std::string& filename)
 {
   std::ifstream file;
   

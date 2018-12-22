@@ -538,11 +538,11 @@ void AssignmentProblemSolver::assignmentsuboptimal1(assignments_t& assignment, t
 
 					if (singleValidationFound)
 					{
-						for (size_t row = 0; row < nOfRows; row++)
-							if ((nOfValidObservations[row] > 1) && distMatrix[row + nOfRows*col] != std::numeric_limits<track_t>::max())
+						for (size_t rowIdx = 0; rowIdx < nOfRows; rowIdx++)
+							if ((nOfValidObservations[rowIdx] > 1) && distMatrix[rowIdx + nOfRows*col] != std::numeric_limits<track_t>::max())
 							{
-								distMatrix[row + nOfRows*col] = std::numeric_limits<track_t>::max();
-								nOfValidObservations[row] -= 1;
+								distMatrix[rowIdx + nOfRows*col] = std::numeric_limits<track_t>::max();
+								nOfValidObservations[rowIdx] -= 1;
 								nOfValidTracks[col] -= 1;
 								repeatSteps = true;
 							}

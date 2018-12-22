@@ -51,7 +51,8 @@ void LocalTracker::track(const std::vector< Detection >& _detections, VecBool& _
     last_beta_ = beta_.row(beta_.rows() - 1);
       
     //KALMAN PREDICT STEP
-    uint i = 0, j = 0;
+    uint i = 0;
+    j = 0;
     
     for(const auto& track : tracks_)
     {
@@ -84,13 +85,12 @@ void LocalTracker::track(const std::vector< Detection >& _detections, VecBool& _
 
 void LocalTracker::delete_tracks()
 {
-  for(size_t i = tracks_.size() - 1; i >= 0; --i)
-  {
-    if(!tracks_.at(i)->isAlive() && tracks_.at(i)->getId() != -1)
-    {
-      tracks_.erase(tracks_.begin() + i);
-    }
-  }
+  tracks_.erase(
+    std::remove_if(
+      tracks_.begin(), 
+      tracks_.end(), 
+      [](auto& currentTrack) {return !currentTrack->isAlive() && currentTrack->getId() != -1; }),
+    tracks_.end());
 }
 
 void LocalTracker::associate(std::vector< Eigen::Vector2f >& _selected_detections, cv::Mat& _q, 
@@ -124,7 +124,6 @@ void LocalTracker::associate(std::vector< Eigen::Vector2f >& _selected_detection
       cv::Mat tr_cv(cv::Size(2, 1), CV_32FC1);
       tr_cv.at<float>(0) = tr(0);
       tr_cv.at<float>(1) = tr(1);
-      const int& id = track->getId();
       const Eigen::Matrix2f& S = track->S().inverse();
       cv::Mat S_cv;
       cv::eigen2cv(S, S_cv);

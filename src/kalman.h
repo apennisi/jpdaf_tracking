@@ -63,7 +63,7 @@ namespace JPDAFTracker
       {
 	return entropy;
       }
-      void setDt(const double& dt)
+      void setDt(const float& dt)
       {
 	A(4) = A(14) = dt;
       }
@@ -90,7 +90,7 @@ namespace JPDAFTracker
       bool first;
       float entropy;
     private:
-      static constexpr float k = 5.0620; // n/2 * log(4*PI) where n is the state dimention (x, y, x', y')
+      static constexpr float k = 5.0620f; // n/2 * log(4*PI) where n is the state dimention (x, y, x', y')
       //static constexpr float k = 2.1984;
   };
 }

@@ -28,10 +28,10 @@ void Tracker::drawTracks(cv::Mat &_img) const
 Eigen::MatrixXf Tracker::joint_probability(const Matrices& _association_matrices,
 						const Vec2f& selected_detections)
 {
-  uint hyp_num = _association_matrices.size();
+  auto hyp_num = _association_matrices.size();
   Eigen::VectorXf Pr(_association_matrices.size());
   uint validationIdx = _association_matrices.at(0).rows();
-  uint tracksize = tracks_.size();
+	auto tracksize = tracks_.size();
   float prior;
   
   //Compute the total volume
@@ -164,9 +164,9 @@ Tracker::Matrices Tracker::generate_hypothesis(const Vec2f& _selected_detections
     
   if(validationIdx != 0)
   {
-    for(uint i = 0; i < _q.rows; ++i)
+    for(auto i = 0; i < _q.rows; ++i)
     {
-      for(uint j = 1; j < _q.cols; ++j)
+      for(auto j = 1; j < _q.cols; ++j)
       {
 	if(_q.at<int>(i, j)) // == 1
 	{
@@ -174,11 +174,11 @@ Tracker::Matrices Tracker::generate_hypothesis(const Vec2f& _selected_detections
 	  tmp_association_matrices.at(hyp_num)(i, j) = 1;
 	  ++hyp_num;
 	  if ( j == _q.cols - 1 ) continue;
-	  for(uint l = 0; l < _q.rows; ++l)
+	  for(auto l = 0; l < _q.rows; ++l)
 	  {
 	    if(l != i)
 	    {
-	      for(uint m = j + 1; m < _q.cols; ++m) // CHECK Q.COLS - 1
+	      for(auto m = j + 1; m < _q.cols; ++m) // CHECK Q.COLS - 1
 	      {
 		if(_q.at<int>(l, m))
 		{
@@ -209,7 +209,7 @@ Tracker::VecBool Tracker::analyze_tracks(const cv::Mat& _q, const std::vector<De
   cv::Mat col_sum(cv::Size(m_q.cols, 1), _q.type(), cv::Scalar(0));
 
   VecBool not_associate(m_q.cols, true); //ALL TRACKS ARE ASSOCIATED
-  for(uint i = 0; i < m_q.rows; ++i)
+  for(auto i = 0; i < m_q.rows; ++i)
   {
     col_sum += m_q.row(i);
   }

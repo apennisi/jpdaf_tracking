@@ -23,7 +23,7 @@ void LocalTracker::track(const std::vector< Detection >& _detections, VecBool& _
     ++j;
   }
   
-  cv::Mat_<int> q(cv::Size(tracks_.size(), _detections.size()), int(0));
+  cv::Mat_<int> q(cv::Size_<size_t>(tracks_.size(), _detections.size()), int(0));
   std::vector<Eigen::Vector2f> selected_detections;
   
   //ASSOCIATION
@@ -84,7 +84,7 @@ void LocalTracker::track(const std::vector< Detection >& _detections, VecBool& _
 
 void LocalTracker::delete_tracks()
 {
-  for(int i = tracks_.size() - 1; i >= 0; --i)
+  for(size_t i = tracks_.size() - 1; i >= 0; --i)
   {
     if(!tracks_.at(i)->isAlive() && tracks_.at(i)->getId() != -1)
     {
@@ -98,7 +98,7 @@ void LocalTracker::associate(std::vector< Eigen::Vector2f >& _selected_detection
 {
   //Extracting the measurements inside the validation gate for all the tracks
   //Create a q matrix with a width = clutter + number of tracks
-  _q = cv::Mat_<int>(cv::Size(tracks_.size() + 1, _detections.size()), int(0));
+  _q = cv::Mat_<int>(cv::Size_<size_t>(tracks_.size() + 1, _detections.size()), int(0));
   uint validationIdx = 0;
   not_associated_.clear();
   uint j = 0;
@@ -150,6 +150,6 @@ void LocalTracker::associate(std::vector< Eigen::Vector2f >& _selected_detection
     }
     ++j;
   }
-  _q = _q(cv::Rect(0, 0, tracks_.size() + 1, validationIdx));
+  _q = _q(cv::Rect_<size_t>(0, 0, tracks_.size() + 1, validationIdx));
   ////////////////////////////////////////////////////////////////////////////
 }

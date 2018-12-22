@@ -56,7 +56,7 @@ namespace JPDAFTracker
       virtual void track(const Detections& _detections, VecBool& _isAssoc, uint& _trackID) { ; }
       virtual inline void push_back(const Track_ptr& _track) { ; }
     public:
-      inline const uint size() const
+      inline const size_t size() const
       {
 	return tracks_.size();
       }

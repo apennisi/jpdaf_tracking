@@ -24,7 +24,7 @@ std::map<int, std::vector< std::vector< std::string > > > petsReading(const std:
     while (std::getline(file, line))
     {
       if(line.size() == 0) continue;
-      auto start = 0U;
+      size_t start = 0;
       auto end = line.find(delimiter);
       std::vector<std::string> row;
       while (end != std::string::npos)

@@ -28,9 +28,9 @@ Kalman::Kalman(const float& dt, const cv::Point2f& target_delta, const float& x,
   
   //INITIAL COVARIANCE MATRIX
   P << std::pow(target_delta.x, 2), 0, 0, 0,
-       0, .1, 0, 0,
+       0, .1f, 0, 0,
        0, 0, std::pow(target_delta.y, 2), 0,
-       0, 0, 0, .1;
+       0, 0, 0, .1f;
   //GAIN     
   K = Eigen::MatrixXf(4, 2);
   
@@ -67,7 +67,7 @@ cv::Point2f Kalman::predict()
   S = C * P_predict * C.transpose() + R;
   
   //Compute Entropy
-  entropy = k + .5 * log10(P.determinant()); 
+  entropy = k + .5f * log10(P.determinant()); 
   
   last_prediction_eigen = z_predict;
   last_prediction = cv::Point2f(z_predict(0), z_predict(1)); 

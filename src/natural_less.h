@@ -11,7 +11,7 @@
 #include <iostream>
 #include <cstdlib>     /* strtol */
 
-int strcmp_natural(const char *a, const char *b)
+inline int strcmp_natural(const char *a, const char *b)
 {
     if (!a || !b)   // if one doesn't exist, it comes first
         return a ? 1 : b ? -1 : 0;
@@ -20,8 +20,8 @@ int strcmp_natural(const char *a, const char *b)
     {
         char *remainderA;
         char *remainderB;
-        long valA = strtol(a, &remainderA, 10);
-        long valB = strtol(b, &remainderB, 10);
+        const long valA = strtol(a, &remainderA, 10);
+        const long valB = strtol(b, &remainderB, 10);
         if (valA != valB)
         {
             return valA - valB;         // smaller comes first
@@ -30,8 +30,13 @@ int strcmp_natural(const char *a, const char *b)
         {
             std::ptrdiff_t lengthA = remainderA - a;
             std::ptrdiff_t lengthB = remainderB - b;
+
             if (lengthA != lengthB)
-                return lengthA - lengthB;   // shorter comes first
+            {
+                if (lengthA - lengthB >= std::numeric_limits<int>::max())
+                    throw std::runtime_error("The strings are too long!");
+                return static_cast<int>(lengthA - lengthB);   // shorter comes first
+            }
             else                            // all being equal, recurse
                 return strcmp_natural(remainderA, remainderB);
         }
@@ -52,7 +57,7 @@ int strcmp_natural(const char *a, const char *b)
     return *a ? 1 : *b ? -1 : 0;
 }
 
-bool natural_sort(const std::string& lhs, const std::string& rhs)
+inline bool natural_sort(const std::string& lhs, const std::string& rhs)
 {
     return strcmp_natural(lhs.c_str(), rhs.c_str()) < 0;
 }

@@ -36,23 +36,23 @@
 
 ImageManager::ImageManager(const std::string &d)
 {
-    dir_name = d;
-    DIR *dir;
-    try
-    {
-        dir = opendir(d.c_str());
-    } catch (std::exception& e)
-    {
-        std::cout << "Directory does not exist " << e.what() << std::endl;
-    }
+    //dir_name = d;
+    //DIR *dir;
+    //try
+    //{
+    //    dir = opendir(d.c_str());
+    //} catch (std::exception& e)
+    //{
+    //    std::cout << "Directory does not exist " << e.what() << std::endl;
+    //}
 
-    struct dirent *dp;
-    while ((dp=readdir(dir)) != NULL) {
-        if(strcmp(dp->d_name, "..") != 0  &&  strcmp(dp->d_name, ".") != 0 && dp->d_name[0] != '.'
-                && dp->d_name[0] != '~') {
-            filename.push_back(dir_name + "/" + std::string(dp->d_name));
-        }
-    }
+    //struct dirent *dp;
+    //while ((dp=readdir(dir)) != NULL) {
+    //    if(strcmp(dp->d_name, "..") != 0  &&  strcmp(dp->d_name, ".") != 0 && dp->d_name[0] != '.'
+    //            && dp->d_name[0] != '~') {
+    //        filename.push_back(dir_name + "/" + std::string(dp->d_name));
+    //    }
+    //}
 
     assert(filename.size() != 0);
 

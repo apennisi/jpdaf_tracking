@@ -62,7 +62,7 @@ class ImageManager
          * \brief Return the number of analysed images
          *
          */
-        inline int getCount() const
+        inline size_t getCount() const
         {
             return count;
         }
@@ -70,7 +70,7 @@ class ImageManager
          * \brief Return the end of the image set
          *
          */
-        inline int getEnd() const
+        inline size_t getEnd() const
         {
             return end;
         }
@@ -96,7 +96,7 @@ class ImageManager
          *
          */
         void sorting(std::vector<std::string>& data);
-        int count, end;
+        size_t count, end;
         std::vector<std::string> filename;
         std::string dir_name;
 };

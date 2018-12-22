@@ -76,7 +76,7 @@ void GlobalTracker::track(const GlobalTracker::Detections& _detections)
       }
     }
     
-    cv::Mat_<int> q(cv::Size(tracks_.size(), _detections.size()), int(0));
+    cv::Mat_<int> q(cv::Size_<size_t>(tracks_.size(), _detections.size()), int(0));
     
     std::vector<Eigen::Vector2f> selected_detections;
   
@@ -95,7 +95,8 @@ void GlobalTracker::track(const GlobalTracker::Detections& _detections)
       last_beta_ = beta_.row(beta_.rows() - 1);
 	
       //KALMAN PREDICT STEP
-      uint i = 0, j = 0;
+      i = 0;
+      auto j = 0;
       
       for(const auto& track : tracks_)
       {
@@ -126,20 +127,24 @@ void GlobalTracker::track(const GlobalTracker::Detections& _detections)
 
 void GlobalTracker::delete_tracks()
 {
-  for(int i = localTrackers_.size() - 1; i >= 0; --i)
-  {
-    if(localTrackers_.at(i)->size() == 0)
-    {
-      localTrackers_.erase(localTrackers_.begin() + i);
-    }
-  }
+  localTrackers_.erase(
+    std::remove_if(
+      localTrackers_.begin(),
+      localTrackers_.end(),
+      [](auto& localTracker) {return localTracker->size()==0; }),
+    localTrackers_.end());
 }
 
 
 void GlobalTracker::manage_new_tracks()
 {
-  const uint& prevDetSize = prev_detections_.size();
-  const uint& deteSize = not_associated_.size();
+  if( prev_detections_.size() > std::numeric_limits<int>::max() ||
+      not_associated_.size() > std::numeric_limits<int>::max()) 
+  {
+    throw std::runtime_error("Number of detections too large!");
+  }
+  const auto& prevDetSize = static_cast<int>(prev_detections_.size());
+  const auto& deteSize = static_cast<int>(not_associated_.size());
   if(prevDetSize == 0)
   {
     prev_detections_ = not_associated_;
@@ -150,24 +155,24 @@ void GlobalTracker::manage_new_tracks()
   }
   else
   {
-    cv::Mat assigmentsBin = cv::Mat::zeros(cv::Size(deteSize, prevDetSize), CV_32SC1);
-    cv::Mat costMat = cv::Mat(cv::Size(deteSize, prevDetSize), CV_32FC1);
+    cv::Mat assigmentsBin = cv::Mat::zeros(cv::Size_<size_t>(deteSize, prevDetSize), CV_32SC1);
+    cv::Mat costMat = cv::Mat(cv::Size_<size_t>(deteSize, prevDetSize), CV_32FC1);
     
     auto euclideanDist = [](const Eigen::Vector2f& p1, const Eigen::Vector2f& p2)
-			    { 
-			      const Eigen::Vector2f& tmp = p1 - p2; 
-			      return sqrt(tmp(0) * tmp(0) + tmp(1) * tmp(1));
-			    };
+		{ 
+			const Eigen::Vector2f& tmp = p1 - p2; 
+			return sqrt(tmp(0) * tmp(0) + tmp(1) * tmp(1));
+		};
 
     assignments_t assignments;
     distMatrix_t costs(deteSize * prevDetSize);
 
-    for(uint i = 0; i < prevDetSize; ++i)
+    for(auto prevDet = 0; prevDet < prevDetSize; ++prevDet) //row
     {
-      for(uint j = 0; j < deteSize; ++j)
+      for(auto det = 0; det < deteSize; ++det) //col
       {
-	costs.at(i + j * prevDetSize ) = euclideanDist(not_associated_.at(j), prev_detections_.at(i));
-	costMat.at<float>(i, j) = costs.at(i + j * prevDetSize );
+	      costs.at(prevDet + det * prevDetSize ) = euclideanDist(not_associated_.at(det), prev_detections_.at(prevDet));
+        costMat.at<float>(prevDet,det) = costs.at(prevDet + det * prevDetSize);
       }
     }
     
@@ -175,34 +180,46 @@ void GlobalTracker::manage_new_tracks()
     AssignmentProblemSolver APS;
     APS.Solve(costs, prevDetSize, deteSize, assignments, AssignmentProblemSolver::optimal);
 
-    const uint& assSize = assignments.size();
-    
-    for(uint i = 0; i < assSize; ++i)
+    if (assignments.size() > std::numeric_limits<int>::max())
     {
-      if( assignments[i] != -1 && costMat.at<float>(i, assignments[i]) < param_.assocCost)
+      throw std::runtime_error("Number of assignments too large!");
+    }
+    auto numberOfAssignments = static_cast<int>(assignments.size());
+    for(auto assignmentIdx = 0; assignmentIdx < numberOfAssignments; ++assignmentIdx)
+    {
+      if (assignments[assignmentIdx] != -1 && costMat.at<float>(assignmentIdx,assignments[assignmentIdx]) < param_.assocCost)
       {
-	assigmentsBin.at<int>(i, assignments[i]) = 1;
+        assigmentsBin.at<int>(assignmentIdx, assignments[assignmentIdx]) = 1;
       }
     }
     
     const uint& rows = assigmentsBin.rows;
     const uint& cols = assigmentsBin.cols;
-    
-    LocalTracker_ptr tracker = LocalTracker_ptr(new LocalTracker(param_));
+
+    auto tracker = std::static_pointer_cast<Tracker>(std::make_shared<LocalTracker>(param_));
         
     
-    for(uint i = 0; i < rows; ++i)
+    for(uint row = 0; row < rows; ++row)
     {
-      for(uint j = 0; j < cols; ++j)
+      for(uint col = 0; col < cols; ++col)
       {
-	if(assigmentsBin.at<int>(i, j))
-	{
-	  const float& vx = not_associated_.at(j).x() - prev_detections_.at(i).x();
-	  const float& vy = not_associated_.at(j).y() - prev_detections_.at(i).y();
-	  std::shared_ptr<Track> tr(new Track(param_.dt, param_.target_delta, not_associated_.at(j).x(), not_associated_.at(j).y(), 
-						vx, vy, param_.g_sigma, param_.gamma, param_.R ));
-	  tracker->push_back(tr);
-	}
+	      if(assigmentsBin.at<int>(row, col))
+	      {
+	        const float& vx = not_associated_.at(col).x() - prev_detections_.at(row).x();
+	        const float& vy = not_associated_.at(col).y() - prev_detections_.at(row).y();
+	        std::shared_ptr<Track> tr(
+            new Track(
+              param_.dt,
+              param_.target_delta,
+            not_associated_.at(col).x(),
+            not_associated_.at(col).y(), 
+						  vx,
+              vy,
+              param_.g_sigma,
+              param_.gamma, 
+              param_.R ));
+	        tracker->push_back(tr);
+	      }
       }
     }
     if(tracker->size() > 0)
@@ -212,7 +229,7 @@ void GlobalTracker::manage_new_tracks()
       
     
     cv::Mat notAssignedDet(cv::Size(assigmentsBin.cols, 1), CV_32SC1, cv::Scalar(0));
-    for(uint i = 0; i < assigmentsBin.rows; ++i)
+    for(int i = 0; i < assigmentsBin.rows; ++i)
     {
       notAssignedDet += assigmentsBin.row(i);
     }
@@ -223,10 +240,9 @@ void GlobalTracker::manage_new_tracks()
     cv::Mat dets;
     cv::findNonZero(notAssignedDet, dets);
     prev_detections_.clear();
-    for(uint i = 0; i < dets.total(); ++i)
+    for(uint det = 0; det < dets.total(); ++det)
     {
-      const uint& idx = dets.at<cv::Point>(i).x;
-      prev_detections_.push_back(not_associated_.at(i));
+      prev_detections_.push_back(not_associated_.at(det));
     }
   }
 }
@@ -237,7 +253,7 @@ void GlobalTracker::associate(std::vector< Eigen::Vector2f >& _selected_detectio
 {
   //Extracting the measurements inside the validation gate for all the tracks
   //Create a q matrix with a width = clutter + number of tracks
-  _q = cv::Mat_<int>(cv::Size(tracks_.size() + 1, _detections.size()), int(0));
+  _q = cv::Mat_<int>(cv::Size_<size_t>(tracks_.size() + 1, _detections.size()), int(0));
   uint validationIdx = 0;
   uint j = 0;
   
@@ -262,7 +278,6 @@ void GlobalTracker::associate(std::vector< Eigen::Vector2f >& _selected_detectio
       cv::Mat tr_cv(cv::Size(2, 1), CV_32FC1);
       tr_cv.at<float>(0) = tr(0);
       tr_cv.at<float>(1) = tr(1);
-      const int& id = track->getId();
       const Eigen::Matrix2f& S = track->S().inverse();
       cv::Mat S_cv;
       cv::eigen2cv(S, S_cv);
@@ -283,6 +298,6 @@ void GlobalTracker::associate(std::vector< Eigen::Vector2f >& _selected_detectio
     }
     ++j;
   }
-  _q = _q(cv::Rect(0, 0, tracks_.size() + 1, validationIdx));
+  _q = _q(cv::Rect_<size_t>(0, 0, tracks_.size() + 1, validationIdx));
   ////////////////////////////////////////////////////////////////////////////
 }

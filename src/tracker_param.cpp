@@ -41,7 +41,7 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  pd = atof(line.c_str());
+	  pd = strtof(line.c_str(),nullptr);
 	}
 	catch(...)
 	{
@@ -54,7 +54,7 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  pg = atof(line.c_str());
+	  pg = strtof(line.c_str(),nullptr);
 	}
 	catch(...)
 	{
@@ -67,7 +67,7 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  g_sigma = atof(line.c_str());
+	  g_sigma = strtof(line.c_str(), nullptr);
 	}
 	catch(...)
 	{
@@ -80,7 +80,7 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  global_g_sigma = atof(line.c_str());
+	  global_g_sigma = strtof(line.c_str(), nullptr);
 	}
 	catch(...)
 	{
@@ -93,8 +93,8 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  lambda = atof(line.c_str());
-	  gamma = lambda * 0.000001;
+	  lambda = strtof(line.c_str(), nullptr);
+	  gamma = lambda * 0.000001f;
 	}
 	catch(...)
 	{
@@ -142,7 +142,7 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  assocCost = atof(line.c_str());
+	  assocCost = strtof(line.c_str(), nullptr);
 	}
 	catch(...)
 	{
@@ -155,7 +155,7 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  global_assocCost = atof(line.c_str());
+	  global_assocCost = strtof(line.c_str(), nullptr);
 	}
 	catch(...)
 	{
@@ -168,7 +168,7 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  dt = atof(line.c_str());
+	  dt = strtof(line.c_str(), nullptr);
 	}
 	catch(...)
 	{
@@ -181,7 +181,7 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  max_missed_rate = atoi(line.c_str());
+	  max_missed_rate = strtol(line.c_str(),nullptr,10);
 	}
 	catch(...)
 	{
@@ -194,7 +194,7 @@ void TrackerParam::read(const std::string& filename)
 	std::getline(file, line);
 	try
 	{
-	  min_acceptance_rate = atoi(line.c_str());
+	  min_acceptance_rate = strtol(line.c_str(), nullptr, 10);
 	}
 	catch(...)
 	{

@@ -24,8 +24,9 @@ set(EXECUTABLE_OUTPUT_PATH ../bin)
 
 include_directories( src )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
-include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories( ${EIGEN3_INCLUDE_DIR} )
 
 file(GLOB_RECURSE tracker_SRC "src/*.cpp")
-add_executable(${execName} ${tracker_SRC})
+file(GLOB_RECURSE tracker_HDR "src/*.h")
+add_executable(${execName} ${tracker_SRC} ${tracker_HDR})
 TARGET_LINK_LIBRARIES( ${execName} ${OpenCV_LIBS} )

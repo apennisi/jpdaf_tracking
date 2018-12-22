@@ -2,10 +2,6 @@
 #define _HUNGARIAN_ALG_H_
 
 #include <vector>
-#include <iostream>
-#include <limits>
-#include <time.h>
-#include <assert.h>
 
 // http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=hungarianAlgorithm
 typedef float track_t;

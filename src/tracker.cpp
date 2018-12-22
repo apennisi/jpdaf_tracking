@@ -1,4 +1,8 @@
 #include "tracker.h"
+#include <Eigen/Dense>
+#include <opencv2/opencv.hpp>
+#include <numeric>
+
 
 using namespace JPDAFTracker;
 

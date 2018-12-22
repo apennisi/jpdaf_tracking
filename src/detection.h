@@ -29,10 +29,7 @@
  */
 
 #ifndef _DETECTION_H_
-#define _DETECTION_H_
-
-#include <iostream>
-#include <opencv2/opencv.hpp>
+#define _DETECTION_H_ 
 
 namespace JPDAFTracker
 {

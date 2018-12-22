@@ -30,7 +30,9 @@
 
 #include <imagemanager.h>
 #include <natural_less.h>
-#include <assert.h>
+#include <string>
+#include <algorithm>
+#include <cassert>
 
 ImageManager::ImageManager(const std::string &d)
 {
@@ -51,8 +53,6 @@ ImageManager::ImageManager(const std::string &d)
             filename.push_back(dir_name + "/" + std::string(dp->d_name));
         }
     }
-
-
 
     assert(filename.size() != 0);
 

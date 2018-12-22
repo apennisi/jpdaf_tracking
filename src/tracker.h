@@ -31,12 +31,6 @@
 #ifndef _TRACKER_H_
 #define _TRACKER_H_
 
-#include <iostream>
-#include <Eigen/Dense>
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/eigen.hpp>
-#include <numeric>
-
 #include "track.h"
 #include "tracker_param.h"
 #include "detection.h"

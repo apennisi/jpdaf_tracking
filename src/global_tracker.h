@@ -31,14 +31,7 @@
 #ifndef _GLOBAL_TRACKER_H_
 #define _GLOBAL_TRACKER_H_
 
-#include <iostream>
-#include <Eigen/Dense>
-#include <opencv2/opencv.hpp>
-#include <opencv2/core/eigen.hpp>
-#include <numeric>
-
 #include "tracker.h"
-#include "local_tracker.h"
 
 namespace JPDAFTracker
 {

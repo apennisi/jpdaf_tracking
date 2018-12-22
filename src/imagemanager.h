@@ -40,12 +40,8 @@
 #ifndef IMAGEMANAGER_H
 #define IMAGEMANAGER_H
 
-#include <iostream>
 #include <vector>
-#include <string.h>
-#include <algorithm>
 #include <dirent.h>
-#include <stdio.h>
 
 class ImageManager
 {

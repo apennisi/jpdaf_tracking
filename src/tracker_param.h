@@ -32,8 +32,6 @@
 #ifndef _TRACKER_PARAM_H_
 #define _TRACKER_PARAM_H_
 
-#include <iostream>
-#include <fstream>
 #include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
 

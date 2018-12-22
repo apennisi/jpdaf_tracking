@@ -31,9 +31,8 @@
 #ifndef _TRACK_H_
 #define _TRACK_H_
 
-#include <iostream>
 #include <memory>
-#include <Eigen/Dense>
+#include <Eigen/Core>
 #include <opencv2/core/eigen.hpp>
 #include <opencv2/opencv.hpp>
 

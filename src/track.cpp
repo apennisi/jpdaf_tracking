@@ -1,4 +1,6 @@
 #include "track.h"
+#include <iostream>
+#include <Eigen/Dense>
 
 using namespace JPDAFTracker;
 

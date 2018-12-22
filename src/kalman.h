@@ -32,7 +32,7 @@
 #ifndef _KALMAN_H_
 #define _KALMAN_H_
 
-#include <iostream>
+
 #include <Eigen/Dense>
 #include <opencv2/opencv.hpp>
 

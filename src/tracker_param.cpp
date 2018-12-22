@@ -1,6 +1,8 @@
 //TODO INSERT NEW PARAMETERS TO READ
 
 #include "tracker_param.h"
+#include <iostream>
+#include <fstream>
 
 using namespace JPDAFTracker;
 

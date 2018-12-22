@@ -9,7 +9,7 @@
 #define NATURAL_LESS_H
 
 #include <iostream>
-#include <stdlib.h>     /* strtol */
+#include <cstdlib>     /* strtol */
 
 int strcmp_natural(const char *a, const char *b)
 {

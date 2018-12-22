@@ -1,5 +1,9 @@
 #include "hungarianAlg.h"
 #include <limits>
+#include <iostream>
+#include <limits>
+#include <ctime>
+#include <cassert>
 
 AssignmentProblemSolver::AssignmentProblemSolver()
 {

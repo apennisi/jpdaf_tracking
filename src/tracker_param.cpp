@@ -3,6 +3,7 @@
 #include "tracker_param.h"
 #include <iostream>
 #include <fstream>
+#include <locale>
 
 using namespace JPDAFTracker;
 
@@ -42,9 +43,14 @@ void TrackerParam::read(const std::string& filename)
   
   
   std::string line;
-  while(std::getline(file, line))
-  {
-      std::remove_if(line.begin(), line.end(), isspace);
+	while (std::getline(file, line))
+	{
+			line.erase(
+					std::remove_if(
+							line.begin(),
+							line.end(),
+							[](const char& c) {return std::isspace(c,std::locale("C"));	}), 
+					line.end());
       if(line.empty())
       {
 	continue;

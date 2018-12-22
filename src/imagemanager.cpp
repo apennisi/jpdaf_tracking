@@ -33,26 +33,53 @@
 #include <string>
 #include <algorithm>
 #include <cassert>
+#ifdef _WINDOWS
+#include <Windows.h>
+#elif
+#include <dirent.h>
+#endif
 
-ImageManager::ImageManager(const std::string &d)
+
+std::vector<std::string> ImageManager::getAllFilesInFolder(const std::string& path) const
 {
-    const auto& dir_name = d;
-    DIR *dir;
-    try
-    {
-        dir = opendir(d.c_str());
-    } catch (std::exception& e)
-    {
-        std::cout << "Directory does not exist " << e.what() << std::endl;
+#ifdef _WINDOWS
+    std::vector<std::string> names;
+    auto search_path = path + "/*.*";
+    WIN32_FIND_DATA fd;
+    const auto hFind = ::FindFirstFile(search_path.c_str(), &fd);
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            // read all (real) files in current folder
+            // , delete '!' read other 2 default folder . and ..
+            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+                names.emplace_back(path+fd.cFileName);
+            }
+        } while (::FindNextFile(hFind, &fd));
+        ::FindClose(hFind);
     }
+    return names;
+#elif
+     DIR *dir;
+     try
+     {
+         dir = opendir(d.c_str());
+     } catch (std::exception& e)
+     {
+         std::cout << "Directory does not exist " << e.what() << std::endl;
+     }
 
-    struct dirent *dp;
-    while ((dp=readdir(dir)) != NULL) {
-        if(strcmp(dp->d_name, "..") != 0  &&  strcmp(dp->d_name, ".") != 0 && dp->d_name[0] != '.'
-                && dp->d_name[0] != '~') {
-            fileNames.push_back(dir_name + "/" + std::string(dp->d_name));
-        }
-    }
+     struct dirent *dp;
+     while ((dp=readdir(dir)) != NULL) {
+         if(strcmp(dp->d_name, "..") != 0  &&  strcmp(dp->d_name, ".") != 0 && dp->d_name[0] != '.'
+                 && dp->d_name[0] != '~') {
+             fileNames.push_back(dir_name + "/" + std::string(dp->d_name));
+         }
+     }
+#endif
+}
+ImageManager::ImageManager(const std::string &dir)
+{
+    fileNames = getAllFilesInFolder(dir);
 
     assert(!fileNames.empty());
     sorting(fileNames);

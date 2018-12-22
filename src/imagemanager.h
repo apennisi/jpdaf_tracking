@@ -41,7 +41,6 @@
 #define IMAGEMANAGER_H
 
 #include <vector>
-#include <dirent.h>
 
 class ImageManager
 {
@@ -49,10 +48,10 @@ class ImageManager
         /**
         * \brief Create a new object ImageManager
         *
-        * \param d: directory path
+        * \param dir: directory path
         *
         */
-        explicit ImageManager(const std::string &d);
+        explicit ImageManager(const std::string &dir);
 
         /**
          * \brief Return the next image
@@ -69,6 +68,7 @@ class ImageManager
          *
          */
         void sorting(std::vector<std::string>& data) const;
+        std::vector<std::string> getAllFilesInFolder(const std::string& path) const;
         size_t currentFrameIndex;
         std::vector<std::string> fileNames;
 };

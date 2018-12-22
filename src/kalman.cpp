@@ -4,6 +4,7 @@
 using namespace JPDAFTracker;
 
 Kalman::Kalman(const float& dt, const cv::Point2f& target_delta, const float& x, const float& y, const float& vx, const float& vy, const Eigen::Matrix2f& _R)
+  : entropy(0)
 {
   //TRANSITION MATRIX
   A << 1, dt, 0, 0,
@@ -99,7 +100,6 @@ Eigen::Vector4f Kalman::update(const std::vector< Eigen::Vector2f >& selected_de
   
   a.setZero();
   Eigen::Matrix4f Pk = Eigen::Matrix4f::Zero();
-  Eigen::Vector2f det;
   
   for(i = 0; i < selected_detections.size() + 1; ++i)
   {

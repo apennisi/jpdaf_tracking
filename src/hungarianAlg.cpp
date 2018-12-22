@@ -2,7 +2,6 @@
 #include <limits>
 #include <iostream>
 #include <limits>
-#include <ctime>
 #include <cassert>
 
 AssignmentProblemSolver::AssignmentProblemSolver()
@@ -532,7 +531,6 @@ void AssignmentProblemSolver::assignmentsuboptimal1(assignments_t& assignment, t
 				{
 					if (distMatrix[row + nOfRows * col] != std::numeric_limits<track_t>::max() && (nOfValidObservations[row] == 1))
 					{
-						singleValidationFound = true;
 						break;
 					}
 

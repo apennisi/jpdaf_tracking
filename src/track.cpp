@@ -4,11 +4,29 @@
 
 using namespace JPDAFTracker;
 
+Track::Track()
+  : id(0),
+    maxNotDetection(0),
+    ellipse_volume(0),
+    number_returns(0),
+    side(0),
+    g_sigma(0),
+    gamma(0),
+    life_time(0),
+    nodetections(0),
+    initial_entropy(0),
+    entropy_sentinel() { ; }
+
 Track::Track(const float& dt, const cv::Point2f& target_delta, const float& x, const float& y, const float& vx, const float& vy,
     const float& g_sigma, const float& gamma, const Eigen::Matrix2f& _R)
-  : g_sigma(g_sigma), gamma(gamma)
+  : ellipse_volume(0),
+    number_returns(0),
+    side(0),
+    g_sigma(g_sigma),
+    gamma(gamma),
+    initial_entropy(0)
 {
-  KF = std::shared_ptr<Kalman>(new Kalman(dt, target_delta, x, y, vx, vy, _R));
+  KF = std::make_shared<Kalman>(dt, target_delta, x, y, vx, vy, _R);
   life_time = 0;
   nodetections = 0;
   maxNotDetection = 10;

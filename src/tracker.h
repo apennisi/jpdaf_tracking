@@ -49,7 +49,9 @@ namespace JPDAFTracker
       typedef std::vector< Track_ptr > Tracks;
       typedef std::vector<Eigen::Vector2f> Vec2f;
     public:
-      Tracker(const TrackerParam& _param) : param_(_param) { ; }
+      virtual ~Tracker() = default;
+      Tracker(const TrackerParam& _param);
+
       void drawTracks(cv::Mat &_img) const;
     public:
       virtual void track(const Detections&) { ; }

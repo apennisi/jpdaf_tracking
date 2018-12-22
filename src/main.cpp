@@ -99,73 +99,78 @@ int main(int argc, char** argv)
 	{
 	 	return -1;
 	}
-  TrackerParam params; 
-  params.read(std::string(argv[1]));
+  try {
+	  TrackerParam params; 
+	  params.read(std::string(argv[1]));
 	
-  std::map<int, std::vector< std::vector< std::string > > > detections = petsReading(argv[2]);
-  cv::Mat planView = cv::imread("PlanView.png");
-  ImageManager img(argv[3]);
-  std::shared_ptr<Tracker> tracker(new GlobalTracker(params));
-  std::vector< std::vector < std::string > > curr;
-  std::vector<Detection> dets;
+	  std::map<int, std::vector< std::vector< std::string > > > detections = petsReading(argv[2]);
+	  cv::Mat planView = cv::imread("PlanView.png");
+	  ImageManager img(argv[3]);
+	  std::shared_ptr<Tracker> tracker(new GlobalTracker(params));
+	  std::vector< std::vector < std::string > > curr;
+	  std::vector<Detection> dets;
   
-  cv::Mat image, trackingImg, plan;
-  cv::Rect rect;
-  std::vector<cv::Rect> rects;
-  std::vector<cv::Point2f> points;
+	  cv::Mat image, trackingImg, plan;
+	  cv::Rect rect;
+	  std::vector<cv::Rect> rects;
+	  std::vector<cv::Point2f> points;
   
-  const double& milliseconds = 1000 / 7;
+	  const double& milliseconds = 1000 / 7;
   
-  // Setup output video
-cv::VideoWriter output_cap("output.avi", 
-               cv::VideoWriter::fourcc('D','I','V','X'),
-		7,
-               cv::Size(1536, 576));
+	  // Setup output video
+	  cv::VideoWriter output_cap("output.avi", 
+	                             cv::VideoWriter::fourcc('D','I','V','X'),
+	                             7,
+	                             cv::Size(1536, 576));
   
-  for(uint i = 0; i < detections.size(); ++i)
-  {
+	  for(uint i = 0; i < detections.size(); ++i)
+	  {
     
-    rects.clear();
-    points.clear();
-    dets.clear();
-    image = cv::imread(img.getNext(1));
-    trackingImg = image.clone();
-    //plan = planView.clone();
+		  rects.clear();
+		  points.clear();
+		  dets.clear();
+		  image = cv::imread(img.getNext(1));
+		  trackingImg = image.clone();
+		  //plan = planView.clone();
     
-    curr = detections[i+1];
-    std::stringstream ss;
-    int j = 0;
-    double x, y;
-    for(const auto &c : curr)
-    {
-      rect = cv::Rect(cvRound(atof(c[0].c_str())), cvRound(atof(c[1].c_str())),
-                  cvRound(atof(c[2].c_str())), cvRound(atof(c[3].c_str())));
+		  curr = detections[i+1];
+		  std::stringstream ss;
+		  int j = 0;
+		  double x, y;
+		  for(const auto &c : curr)
+		  {
+			  rect = cv::Rect(cvRound(atof(c[0].c_str())), cvRound(atof(c[1].c_str())),
+			                  cvRound(atof(c[2].c_str())), cvRound(atof(c[3].c_str())));
       
-      rects.push_back(rect);
+			  rects.push_back(rect);
       
-      points.push_back(cv::Point2f(rect.x + (rect.width >> 1), rect.y + rect.height));
-      calcProjection(cv::Point2f(rect.x + (rect.width >> 1), rect.y + rect.height), x, y);
-      Detection d(rect.x + (rect.width >> 1), rect.y + (rect.height >> 1), rect.width, rect.height);
-      dets.push_back(d);
+			  points.push_back(cv::Point2f(rect.x + (rect.width >> 1), rect.y + rect.height));
+			  calcProjection(cv::Point2f(rect.x + (rect.width >> 1), rect.y + rect.height), x, y);
+			  Detection d(rect.x + (rect.width >> 1), rect.y + (rect.height >> 1), rect.width, rect.height);
+			  dets.push_back(d);
       
-      cv::rectangle(image, rect, cv::Scalar(0, 0, 255), 3 );
+			  cv::rectangle(image, rect, cv::Scalar(0, 0, 255), 3 );
       
-      ss.str("");
-      ss << j;
+			  ss.str("");
+			  ss << j;
       
-      cv::putText(image, ss.str(), cv::Point(cvRound(atof(c[0].c_str())), cvRound(atof(c[1].c_str()))), cv::FONT_HERSHEY_SIMPLEX,
-		  0.55, cv::Scalar(0, 255, 0), 2, cv::LineTypes::LINE_AA);
+			  cv::putText(image, ss.str(), cv::Point(cvRound(atof(c[0].c_str())), cvRound(atof(c[1].c_str()))), cv::FONT_HERSHEY_SIMPLEX,
+			              0.55, cv::Scalar(0, 255, 0), 2, cv::LineTypes::LINE_AA);
       
-      ++j;
-    }
+			  ++j;
+		  }
     
-    tracker->track(dets);
-    tracker->drawTracks(trackingImg);
-    const cv::Mat& m = mosaic(image, trackingImg);
-    cv::imshow("JPDAFTracker", m);
-    output_cap << m;
-    cv::waitKey(cvRound(milliseconds));
-    dets.clear();  
+		  tracker->track(dets);
+		  tracker->drawTracks(trackingImg);
+		  const cv::Mat& m = mosaic(image, trackingImg);
+		  cv::imshow("JPDAFTracker", m);
+		  output_cap << m;
+		  cv::waitKey(cvRound(milliseconds));
+		  dets.clear();  
+	  }
+  }
+  catch (...) {
+			return -1;
   }
   
   return 0;

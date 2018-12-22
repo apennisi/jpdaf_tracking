@@ -41,7 +41,10 @@ namespace JPDAFTracker
   class Kalman
   {
     public:
-      Kalman() { ; }
+      Kalman()
+        : first(false),
+          entropy(0) { ; }
+
       Kalman(const float& dt, const cv::Point2f& target_delta, const float& x, const float& y, const float& vx, const float& vy, const Eigen::Matrix2f& _R);
       cv::Point2f predict();
       void gainUpdate(const float& beta);

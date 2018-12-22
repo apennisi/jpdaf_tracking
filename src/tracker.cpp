@@ -6,6 +6,12 @@
 
 using namespace JPDAFTracker;
 
+Tracker::Tracker(const TrackerParam& _param)
+	: trackID_(0),
+	  init_(false),
+	  startTracking_{false},
+	  param_(_param) { ; }
+
 void Tracker::drawTracks(cv::Mat &_img) const
 {
   std::stringstream ss;

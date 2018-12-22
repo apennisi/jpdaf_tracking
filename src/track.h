@@ -43,7 +43,8 @@ namespace JPDAFTracker
   class Track
   {
     public:
-      Track() { ; }
+	  Track();
+
       Track(const float& dt, const cv::Point2f& target_delta, const float& x, const float& y, 
 	    const float& vx, const float& vy, const float& g_sigma, const float& gamma, const Eigen::Matrix2f& _R);
       cv::Point2f predict();

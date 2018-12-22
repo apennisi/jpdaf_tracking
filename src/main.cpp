@@ -95,8 +95,13 @@ cv::Mat mosaic(const cv::Mat& img1, const cv::Mat& img2)
 
 int main(int argc, char** argv)
 {
-  TrackerParam params;
+  if (argc != 4) 
+	{
+	 	return -1;
+	}
+  TrackerParam params; 
   params.read(std::string(argv[1]));
+	
   std::map<int, std::vector< std::vector< std::string > > > detections = petsReading(argv[2]);
   cv::Mat planView = cv::imread("PlanView.png");
   ImageManager img(argv[3]);

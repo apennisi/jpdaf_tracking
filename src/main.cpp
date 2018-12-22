@@ -113,7 +113,7 @@ int main(int argc, char** argv)
   
   // Setup output video
 cv::VideoWriter output_cap("output.avi", 
-               CV_FOURCC('D','I','V','X'),
+               cv::VideoWriter::fourcc('D','I','V','X'),
 		7,
                cv::Size(1536, 576));
   
@@ -149,7 +149,7 @@ cv::VideoWriter output_cap("output.avi",
       ss << j;
       
       cv::putText(image, ss.str(), cv::Point(cvRound(atof(c[0].c_str())), cvRound(atof(c[1].c_str()))), cv::FONT_HERSHEY_SIMPLEX,
-		  0.55, cv::Scalar(0, 255, 0), 2, CV_AA);
+		  0.55, cv::Scalar(0, 255, 0), 2, cv::LineTypes::LINE_AA);
       
       ++j;
     }

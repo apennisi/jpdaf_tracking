@@ -36,7 +36,7 @@
 
 ImageManager::ImageManager(const std::string &d)
 {
-    dir_name = d;
+    const auto& dir_name = d;
     DIR *dir;
     try
     {
@@ -50,47 +50,29 @@ ImageManager::ImageManager(const std::string &d)
     while ((dp=readdir(dir)) != NULL) {
         if(strcmp(dp->d_name, "..") != 0  &&  strcmp(dp->d_name, ".") != 0 && dp->d_name[0] != '.'
                 && dp->d_name[0] != '~') {
-            filename.push_back(dir_name + "/" + std::string(dp->d_name));
+            fileNames.push_back(dir_name + "/" + std::string(dp->d_name));
         }
     }
 
-    assert(filename.size() != 0);
-
-    sorting(filename);
-
-    count = -1;
-    end = filename.size();
+    assert(!fileNames.empty());
+    sorting(fileNames);
+    currentFrameIndex = 0;
 }
 
-ImageManager::~ImageManager() {
-    filename.clear();
-}
-
-void ImageManager::sorting(std::vector<std::string>& data)
+void ImageManager::sorting(std::vector<std::string>& data) const
 {
     std::sort(data.begin(), data.end(), natural_sort);
 }
 
-std::string ImageManager::next(const int &speed) {
-    if(count + speed >= end - 1)
+std::string ImageManager::getNext(const int &speed) {
+    auto currentFile = fileNames[currentFrameIndex];
+    if(currentFrameIndex + speed > fileNames.size())
     {
-        count = end - 1;
+        currentFrameIndex = fileNames.size();
     }
     else
     {
-        count += speed;
+        currentFrameIndex += speed;
     }
-    return filename[count];
-}
-
-std::string ImageManager::prev(const int &speed) {
-    if(count - speed >= 0)
-    {
-       count -= speed;
-    }
-    else
-    {
-       count = 0;
-    }
-    return filename[count];
+    return currentFile;
 }

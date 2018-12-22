@@ -52,53 +52,25 @@ class ImageManager
         * \param d: directory path
         *
         */
-        ImageManager(const std::string &d);
+        explicit ImageManager(const std::string &d);
+
         /**
-         * \brief ImageManager Destructor
+         * \brief Return the next image
+         *
+         * \return return the next image
          *
          */
-        ~ImageManager();
-        /**
-         * \brief Return the number of analysed images
-         *
-         */
-        inline size_t getCount() const
-        {
-            return count;
-        }
-        /**
-         * \brief Return the end of the image set
-         *
-         */
-        inline size_t getEnd() const
-        {
-            return end;
-        }
-        /**
-         * \brief Return the previous image
-         *
-         * \return return the previous image
-         *
-         */
-        std::string next(const int &speed);
-        /**
-         * \brief Return current frame number
-         *
-         * \return return current frame number
-         *
-         */
-        std::string prev(const int &speed);
+        std::string getNext(const int &speed);
     private:
         /**
-         * \brief Sort the filenames according to the natural sort algorithm
+         * \brief Sort the file names according to the natural sort algorithm
          *
          * \param data: the vector containing the names of the files
          *
          */
-        void sorting(std::vector<std::string>& data);
-        size_t count, end;
-        std::vector<std::string> filename;
-        std::string dir_name;
+        void sorting(std::vector<std::string>& data) const;
+        size_t currentFrameIndex;
+        std::vector<std::string> fileNames;
 };
 
 #endif // IMAGEMANAGER_H

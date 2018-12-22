@@ -123,7 +123,7 @@ cv::VideoWriter output_cap("output.avi",
     rects.clear();
     points.clear();
     dets.clear();
-    image = cv::imread(img.next(1));
+    image = cv::imread(img.getNext(1));
     trackingImg = image.clone();
     //plan = planView.clone();
     

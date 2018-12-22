@@ -54,7 +54,8 @@ namespace JPDAFTracker
       Eigen::Matrix2f R;
       float dt;
     public:
-      TrackerParam() { ; }
+      TrackerParam();
+
       void read(const std::string& filename);
       TrackerParam& operator=(const TrackerParam& param_copy)
       {

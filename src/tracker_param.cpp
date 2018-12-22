@@ -6,6 +6,19 @@
 
 using namespace JPDAFTracker;
 
+TrackerParam::TrackerParam()
+	: pd(0),
+	  pg(0),
+	  g_sigma(0),
+	  lambda(0),
+	  gamma(0),
+	  assocCost(0),
+	  global_assocCost(0),
+	  global_g_sigma(0),
+	  max_missed_rate(0),
+	  min_acceptance_rate(0),
+	  dt(0) { ; }
+
 void TrackerParam::read(const std::string& filename)
 {
   std::ifstream file;

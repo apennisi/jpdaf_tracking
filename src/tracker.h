@@ -52,9 +52,9 @@ namespace JPDAFTracker
       Tracker(const TrackerParam& _param) : param_(_param) { ; }
       void drawTracks(cv::Mat &_img) const;
     public:
-      virtual void track(const Detections& _detections) { ; }
-      virtual void track(const Detections& _detections, VecBool& _isAssoc, uint& _trackID) { ; }
-      virtual inline void push_back(const Track_ptr& _track) { ; }
+      virtual void track(const Detections&) { ; }
+      virtual void track(const Detections&, VecBool&, uint&) { ; }
+      virtual inline void push_back(const Track_ptr&) { ; }
     public:
       inline const size_t size() const
       {
@@ -90,8 +90,8 @@ namespace JPDAFTracker
      Matrices generate_hypothesis(const Vectors2f& _selected_detections, const cv::Mat& _q);
      Eigen::MatrixXf joint_probability(const Matrices& _association_matrices, const Vectors2f& _selected_detections);
     private:
-     virtual void associate(Vectors2f& _selected_detections, cv::Mat& _q, const Detections& _detections) { ; }
-     virtual void associate(Vectors2f& _selected_detections, cv::Mat& _q, const Detections& _detections, VecBool& _isAssoc) { ; }
+     virtual void associate(Vectors2f& , cv::Mat& , const Detections&) { ; }
+     virtual void associate(Vectors2f& , cv::Mat& , const Detections&, VecBool&) { ; }
   };
 }
 

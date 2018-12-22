@@ -68,7 +68,6 @@ Eigen::MatrixXf Tracker::joint_probability(const Matrices& _association_matrices
 	  {
 	    const Eigen::Vector2f& z_predict = tracks_.at(notZero)->getLastPredictionEigen();
 	    const Eigen::Matrix2f& S = tracks_.at(notZero)->S();
-	    const Eigen::Vector2f& diff = selected_detections.at(j) - z_predict;
 	    cv::Mat S_cv;
 	    cv::eigen2cv(S, S_cv);
 	    //const float& b = diff.transpose() * S.inverse() * diff;
@@ -149,7 +148,7 @@ Eigen::MatrixXf Tracker::joint_probability(const Matrices& _association_matrices
 }
 
 
-Tracker::Matrices Tracker::generate_hypothesis(const Vec2f& _selected_detections, 
+Tracker::Matrices Tracker::generate_hypothesis(const Vec2f&, 
 						    const cv::Mat& _q)
 {
   uint validationIdx = _q.rows;
@@ -203,7 +202,7 @@ Tracker::Matrices Tracker::generate_hypothesis(const Vec2f& _selected_detections
 }
 
 
-Tracker::VecBool Tracker::analyze_tracks(const cv::Mat& _q, const std::vector<Detection>& _detections)
+Tracker::VecBool Tracker::analyze_tracks(const cv::Mat& _q, const std::vector<Detection>&)
 {
   const cv::Mat& m_q = _q(cv::Rect(1, 0, _q.cols - 1, _q.rows));
   cv::Mat col_sum(cv::Size(m_q.cols, 1), _q.type(), cv::Scalar(0));

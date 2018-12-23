@@ -40,60 +40,63 @@ namespace JPDAFTracker
 {
   class Tracker
   {
-    protected:
-      typedef std::vector<Eigen::Vector2f> Vectors2f;
-      typedef std::vector<Eigen::MatrixXf> Matrices;
-      typedef std::vector<Detection> Detections;
-      typedef std::vector<bool> VecBool;
-      typedef std::shared_ptr<Track> Track_ptr;
-      typedef std::vector< Track_ptr > Tracks;
-      typedef std::vector<Eigen::Vector2f> Vec2f;
-    public:
-      virtual ~Tracker() = default;
-      Tracker(const TrackerParam& _param);
+  protected:
+    typedef std::vector<Eigen::Vector2f> Vectors2f;
+    typedef std::vector<Eigen::MatrixXf> Matrices;
+    typedef std::vector<Detection> Detections;
+    typedef std::vector<bool> VecBool;
+    typedef std::shared_ptr<Track> Track_ptr;
+    typedef std::vector<Track_ptr> Tracks;
+    typedef std::vector<Eigen::Vector2f> Vec2f;
+  public:
+    virtual ~Tracker() = default;
+    explicit Tracker(const TrackerParam& _param);
 
-      void drawTracks(cv::Mat &_img) const;
-    public:
-      virtual void track(const Detections&) { ; }
-      virtual void track(const Detections&, VecBool&, uint&) { ; }
-      virtual inline void push_back(const Track_ptr&) { ; }
-    public:
-      inline const size_t size() const
-      {
-	return tracks_.size();
-      }
-    public:
-      Tracks tracks()
-      {
-	return tracks_;
-      }
-      const Tracks tracks() const
-      {
-	return tracks_;
-      }
-    protected:
-      uint trackID_;
-      bool init_;
-      bool startTracking_;
-      TrackerParam param_;
-      Tracks tracks_;
-      Vec2f prev_detections_;
-      Vectors2f not_associated_;
-      cv::RNG rng_;
-      Eigen::MatrixXf beta_;
-      Eigen::VectorXf last_beta_;
-    private:
-     virtual void delete_tracks() = 0;
-     virtual void manage_new_tracks() { ; }
-    protected:
-      constexpr static uint MAX_ASSOC = 10000;
-    protected:
-     VecBool analyze_tracks(const cv::Mat& _q, const Detections& _detections);
-     Matrices generate_hypothesis(const Vectors2f& _selected_detections, const cv::Mat& _q);
-     Eigen::MatrixXf joint_probability(const Matrices& _association_matrices, const Vectors2f& _selected_detections);
-    private:
-     virtual void associate(Vectors2f& , cv::Mat& , const Detections&) { ; }
-     virtual void associate(Vectors2f& , cv::Mat& , const Detections&, VecBool&) { ; }
+    void drawTracks(cv::Mat& _img) const;
+  public:
+    virtual void track(const Detections&) { ; }
+    virtual void track(const Detections&, VecBool&, uint&) { ; }
+    virtual void push_back(const Track_ptr&) { ; }
+  public:
+    const size_t size() const
+    {
+      return tracks_.size();
+    }
+
+  public:
+    Tracks tracks()
+    {
+      return tracks_;
+    }
+
+    const Tracks& tracks() const
+    {
+      return tracks_;
+    }
+
+  protected:
+    uint trackID_;
+    bool init_;
+    bool startTracking_;
+    TrackerParam param_;
+    Tracks tracks_;
+    Vec2f prev_detections_;
+    Vectors2f not_associated_;
+    cv::RNG rng_;
+    Eigen::MatrixXf beta_;
+    Eigen::VectorXf last_beta_;
+  private:
+    virtual void delete_tracks() = 0;
+    virtual void manage_new_tracks() { ; }
+  protected:
+    constexpr static uint MAX_ASSOC = 10000;
+  protected:
+    VecBool analyze_tracks(const cv::Mat& _q, const Detections& _detections) const;
+    Matrices generate_hypothesis(const Vectors2f& _selected_detections, const cv::Mat& _q) const;
+    Eigen::MatrixXf joint_probability(const Matrices& _association_matrices, const Vectors2f& _selected_detections);
+  private:
+    virtual void associate(Vectors2f&, cv::Mat&, const Detections&) { ; }
+    virtual void associate(Vectors2f&, cv::Mat&, const Detections&, VecBool&) { ; }
   };
 }
 

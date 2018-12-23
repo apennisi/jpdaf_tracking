@@ -40,61 +40,67 @@ namespace JPDAFTracker
 {
   class Kalman
   {
-    public:
-      Kalman()
-        : first(false),
-          entropy(0) { ; }
+  public:
+    Kalman()
+      : first(false),
+        entropy(0) { ; }
 
-      Kalman(const float& dt, const cv::Point2f& target_delta, const float& x, const float& y, const float& vx, const float& vy, const Eigen::Matrix2f& _R);
-      cv::Point2f predict();
-      void gainUpdate(const float& beta);
-      Eigen::Vector4f update(const std::vector< Eigen::Vector2f >& selected_detections, const Eigen::VectorXf& beta, const float& last_beta);
-    public:
-      inline const Eigen::Matrix2f getS() const
-      {
-	return S;
-      }
-      const cv::Point getLastPrediction() const
-      {
-	return last_prediction;
-      }
-      inline const Eigen::Vector2f getLastPredictionEigen() const
-      {
-	return last_prediction_eigen;
-      }
-      inline const float getEntropy() const
-      {
-	return entropy;
-      }
-      void setDt(const float& dt)
-      {
-	A(4) = A(14) = dt;
-      }
-      const Eigen::Vector4f getUpdate()
-      {
-	return x_filter;
-      }
-    private:
-      Eigen::Matrix4f A; //Evolution state matrix
-      Eigen::Matrix2f Q; //Covariance Matrix associated to the evolution process
-      Eigen::MatrixXf G; //Evolution Noise Matrix
-      Eigen::Matrix4f P; //Covariance Matrix
-      Eigen::MatrixXf C;
-      Eigen::Matrix2f R; //Proces measurement Covariance matrix
-      Eigen::Matrix2f S;
-      Eigen::MatrixXf K; //Gain
-      Eigen::Matrix4f P_predict; //Covariance Matrix predicted error
-      Eigen::Vector4f x_predict;
-      Eigen::Vector4f x_filter;
-      Eigen::Vector2f z_predict;
-      cv::Point2f last_prediction;
-      Eigen::Vector2f last_prediction_eigen;
-      cv::Point2f last_speed;
-      bool first;
-      float entropy;
-    private:
-      static constexpr float k = 5.0620f; // n/2 * log(4*PI) where n is the state dimention (x, y, x', y')
-      //static constexpr float k = 2.1984;
+    Kalman(const float& dt, const cv::Point2f& target_delta, const float& x, const float& y, const float& vx, const float& vy, const Eigen::Matrix2f& _R);
+    cv::Point2f predict();
+    void gainUpdate(const float& beta);
+    Eigen::Vector4f update(const std::vector<Eigen::Vector2f>& selected_detections, const Eigen::VectorXf& beta, const float& last_beta);
+  public:
+    const Eigen::Matrix2f getS() const
+    {
+      return S;
+    }
+
+    const cv::Point getLastPrediction() const
+    {
+      return last_prediction;
+    }
+
+    const Eigen::Vector2f getLastPredictionEigen() const
+    {
+      return last_prediction_eigen;
+    }
+
+    const float getEntropy() const
+    {
+      return entropy;
+    }
+
+    void setDt(const float& dt)
+    {
+      A(4) = A(14) = dt;
+    }
+
+    const Eigen::Vector4f getUpdate() const
+    {
+      return x_filter;
+    }
+
+  private:
+    Eigen::Matrix4f A; //Evolution state matrix
+    Eigen::Matrix2f Q; //Covariance Matrix associated to the evolution process
+    Eigen::MatrixXf G; //Evolution Noise Matrix
+    Eigen::Matrix4f P; //Covariance Matrix
+    Eigen::MatrixXf C;
+    Eigen::Matrix2f R; //Proces measurement Covariance matrix
+    Eigen::Matrix2f S;
+    Eigen::MatrixXf K; //Gain
+    Eigen::Matrix4f P_predict; //Covariance Matrix predicted error
+    Eigen::Vector4f x_predict;
+    Eigen::Vector4f x_filter;
+    Eigen::Vector2f z_predict;
+    cv::Point2f last_prediction;
+    Eigen::Vector2f last_prediction_eigen;
+    cv::Point2f last_speed;
+    bool first;
+    float entropy;
+  private:
+    static constexpr float k = 5.0620f; // n/2 * log(4*PI) where n is the state dimention (x, y, x', y')
+    //static constexpr float k = 2.1984;
   };
 }
 

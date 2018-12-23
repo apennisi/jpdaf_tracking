@@ -39,36 +39,37 @@ namespace JPDAFTracker
 {
   class TrackerParam
   {
-    public:
-      float pd;
-      float pg;
-      float g_sigma;
-      float lambda;
-      float gamma;
-      float assocCost;
-      float global_assocCost;
-      float global_g_sigma;
-      int max_missed_rate;
-      int min_acceptance_rate;
-      cv::Point2f target_delta;
-      Eigen::Matrix2f R;
-      float dt;
-    public:
-      TrackerParam();
+  public:
+    float pd;
+    float pg;
+    float g_sigma;
+    float lambda;
+    float gamma;
+    float assocCost;
+    float global_assocCost;
+    float global_g_sigma;
+    int max_missed_rate;
+    int min_acceptance_rate;
+    cv::Point2f target_delta;
+    Eigen::Matrix2f R;
+    float dt;
+  public:
+    TrackerParam();
 
-      void read(const std::string& filename);
-      TrackerParam& operator=(const TrackerParam& param_copy)
-      {
-	this->pd = param_copy.pd;
-	this->pg = param_copy.pg;
-	this->g_sigma = param_copy.g_sigma;
-	this->lambda = param_copy.lambda;
-	this->gamma = param_copy.gamma;
-	this->target_delta = param_copy.target_delta;
-	this->assocCost = param_copy.assocCost;
-	this->dt = param_copy.dt;
-	return *this;
-      }
+    void read(const std::string& filename);
+
+    TrackerParam& operator=(const TrackerParam& param_copy)
+    {
+      this->pd = param_copy.pd;
+      this->pg = param_copy.pg;
+      this->g_sigma = param_copy.g_sigma;
+      this->lambda = param_copy.lambda;
+      this->gamma = param_copy.gamma;
+      this->target_delta = param_copy.target_delta;
+      this->assocCost = param_copy.assocCost;
+      this->dt = param_copy.dt;
+      return *this;
+    }
   };
 }
 

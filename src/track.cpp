@@ -17,8 +17,16 @@ Track::Track()
     initial_entropy(0),
     entropy_sentinel() { ; }
 
-Track::Track(const float& dt, const cv::Point2f& target_delta, const float& x, const float& y, const float& vx, const float& vy,
-    const float& g_sigma, const float& gamma, const Eigen::Matrix2f& _R)
+Track::Track(
+  const float& dt,
+  const cv::Point2f& target_delta,
+  const float& x,
+  const float& y,
+  const float& vx,
+  const float& vy,
+  const float& g_sigma,
+  const float& gamma,
+  const Eigen::Matrix2f& _R)
   : ellipse_volume(0),
     number_returns(0),
     side(0),
@@ -39,25 +47,23 @@ cv::Point2f Track::predict()
 {
   last_prediction = KF->predict();
   const Eigen::Matrix2f& S = KF->getS();
-  if(life_time == 0) 
+  if (life_time == 0)
   {
     initial_entropy = KF->getEntropy();
   }
-  else if(nodetections >= maxNotDetection)
+  else if (nodetections >= maxNotDetection)
   {
     entropy_sentinel = TrackState::DISCARD;
   }
-  else if(life_time >= 10)
+  else if (life_time >= 10)
   {
     entropy_sentinel = TrackState::ACCEPT;
   }
-  
+
   //Compute the volume VG
   ellipse_volume = CV_PI * g_sigma * sqrt(S.determinant());
-  const float& param = ellipse_volume*gamma+1;
+  const auto& param = ellipse_volume * gamma + 1;
   number_returns = std::floor(param);
-  side = sqrt(param / gamma) * .5; 
+  side = sqrt(param / gamma) * .5;
   return last_prediction;
 }
-
-

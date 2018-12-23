@@ -8,229 +8,229 @@
 using namespace JPDAFTracker;
 
 TrackerParam::TrackerParam()
-	: pd(0),
-	  pg(0),
-	  g_sigma(0),
-	  lambda(0),
-	  gamma(0),
-	  assocCost(0),
-	  global_assocCost(0),
-	  global_g_sigma(0),
-	  max_missed_rate(0),
-	  min_acceptance_rate(0),
-	  dt(0) { ; }
+  : pd(0),
+    pg(0),
+    g_sigma(0),
+    lambda(0),
+    gamma(0),
+    assocCost(0),
+    global_assocCost(0),
+    global_g_sigma(0),
+    max_missed_rate(0),
+    min_acceptance_rate(0),
+    dt(0) { ; }
 
 void TrackerParam::read(const std::string& filename)
 {
   std::ifstream file;
-  
+
   try
   {
     file.open(filename);
   }
-  catch(...)
+  catch (...)
   {
     std::cerr << "Cannot open " << filename << std::endl;
     file.close();
     exit(-1);
   }
-  
-  if(!file.is_open())
+
+  if (!file.is_open())
   {
     std::cerr << "Error: file " << filename << " not found!" << std::endl;
     exit(-1);
   }
-  
-  
+
+
   std::string line;
-	while (std::getline(file, line))
-	{
-			line.erase(
-					std::remove_if(
-							line.begin(),
-							line.end(),
-							[](const char& c) {return std::isspace(c,std::locale("C"));	}), 
-					line.end());
-      if(line.empty())
+  while (std::getline(file, line))
+  {
+    line.erase(
+      std::remove_if(
+        line.begin(),
+        line.end(),
+        [](const char& c) { return std::isspace(c, std::locale("C")); }),
+      line.end());
+    if (line.empty())
+    {
+      continue;
+    }
+    else if (line.find("[PD]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
       {
-	continue;
+        pd = strtof(line.c_str(), nullptr);
       }
-      else if(line.find("[PD]") != std::string::npos)
+      catch (...)
       {
-	std::getline(file, line);
-	try
-	{
-	  pd = strtof(line.c_str(),nullptr);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the PD: " << line << std::endl;
-	  exit(-1);
-	}
+        std::cerr << "Error in converting the PD: " << line << std::endl;
+        exit(-1);
       }
-      else if(line.find("[PG]") != std::string::npos)
+    }
+    else if (line.find("[PG]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
       {
-	std::getline(file, line);
-	try
-	{
-	  pg = strtof(line.c_str(),nullptr);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the PG: " << line << std::endl;
-	  exit(-1);
-	}
+        pg = strtof(line.c_str(), nullptr);
       }
-      else if(line.find("[LOCAL_GSIGMA]") != std::string::npos)
+      catch (...)
       {
-	std::getline(file, line);
-	try
-	{
-	  g_sigma = strtof(line.c_str(), nullptr);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the LOCAL_GSIGMA: " << line << std::endl;
-	  exit(-1);
-	}
+        std::cerr << "Error in converting the PG: " << line << std::endl;
+        exit(-1);
       }
-      else if(line.find("[GLOBAL_GSIGMA]") != std::string::npos)
+    }
+    else if (line.find("[LOCAL_GSIGMA]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
       {
-	std::getline(file, line);
-	try
-	{
-	  global_g_sigma = strtof(line.c_str(), nullptr);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the GLOBAL_GSIGMA: " << line << std::endl;
-	  exit(-1);
-	}
+        g_sigma = strtof(line.c_str(), nullptr);
       }
-      else if(line.find("[LAMBDA]") != std::string::npos)
+      catch (...)
       {
-	std::getline(file, line);
-	try
-	{
-	  lambda = strtof(line.c_str(), nullptr);
-	  gamma = lambda * 0.000001f;
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the LAMBDA: " << line << std::endl;
-	  exit(-1);
-	}
+        std::cerr << "Error in converting the LOCAL_GSIGMA: " << line << std::endl;
+        exit(-1);
       }
-      else if(line.find("[GAMMA]") != std::string::npos)
+    }
+    else if (line.find("[GLOBAL_GSIGMA]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
       {
-	std::getline(file, line);
-	try
-	{
-	  std::istringstream iss(line);
-	  float a, b;
-	  if (!(iss >> a >> b)) { break; }
-	  target_delta = cv::Point2f(a, b);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the LAMBDA: " << line << std::endl;
-	  exit(-1);
-	}
+        global_g_sigma = strtof(line.c_str(), nullptr);
       }
-      else if(line.find("[R_MATRIX]") != std::string::npos)
+      catch (...)
       {
-	std::getline(file, line);
-	try
-	{
-	  std::istringstream iss(line);
-	  float a, b, c, d;
-	  if (!(iss >> a >> b)) { break; }
-	  std::getline(file, line);
-	  iss = std::istringstream(line);
-	  if (!(iss >> c >> d)) { break; }
-	  R << a, b, c, d;
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the R VALUES: " << line << std::endl;
-	  exit(-1);
-	}
+        std::cerr << "Error in converting the GLOBAL_GSIGMA: " << line << std::endl;
+        exit(-1);
       }
-      else if(line.find("[LOCAL_ASSOCIATION_COST]") != std::string::npos)
+    }
+    else if (line.find("[LAMBDA]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
       {
-	std::getline(file, line);
-	try
-	{
-	  assocCost = strtof(line.c_str(), nullptr);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the LOCAL_ASSOCIATION_COST: " << line << std::endl;
-	  exit(-1);
-	}
+        lambda = strtof(line.c_str(), nullptr);
+        gamma = lambda * 0.000001f;
       }
-      else if(line.find("[GLOBAL_ASSOCIATION_COST]") != std::string::npos)
+      catch (...)
       {
-	std::getline(file, line);
-	try
-	{
-	  global_assocCost = strtof(line.c_str(), nullptr);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the GLOBAL_ASSOCIATION_COST: " << line << std::endl;
-	  exit(-1);
-	}
+        std::cerr << "Error in converting the LAMBDA: " << line << std::endl;
+        exit(-1);
       }
-      else if(line.find("[DT]") != std::string::npos)
+    }
+    else if (line.find("[GAMMA]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
       {
-	std::getline(file, line);
-	try
-	{
-	  dt = strtof(line.c_str(), nullptr);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the DT: " << line << std::endl;
-	  exit(-1);
-	}
+        std::istringstream iss(line);
+        float a, b;
+        if (!(iss >> a >> b)) { break; }
+        target_delta = cv::Point2f(a, b);
       }
-      else if(line.find("[MAX_MISSED_RATE]") != std::string::npos)
+      catch (...)
       {
-	std::getline(file, line);
-	try
-	{
-	  max_missed_rate = strtol(line.c_str(),nullptr,10);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the MAX_MISSED_RATE: " << line << std::endl;
-	  exit(-1);
-	}
+        std::cerr << "Error in converting the LAMBDA: " << line << std::endl;
+        exit(-1);
       }
-      else if(line.find("[MIN_ACCPETANCE_RATE]") != std::string::npos)
+    }
+    else if (line.find("[R_MATRIX]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
       {
-	std::getline(file, line);
-	try
-	{
-	  min_acceptance_rate = strtol(line.c_str(), nullptr, 10);
-	}
-	catch(...)
-	{
-	  std::cerr << "Error in converting the MIN_ACCPETANCE_RATE: " << line << std::endl;
-	  exit(-1);
-	}
+        std::istringstream iss(line);
+        float a, b, c, d;
+        if (!(iss >> a >> b)) { break; }
+        std::getline(file, line);
+        iss = std::istringstream(line);
+        if (!(iss >> c >> d)) { break; }
+        R << a, b, c, d;
       }
-      else
+      catch (...)
       {
-	std::cerr << "Option: " << line << " does not exist!" << std::endl;
-	exit(-1);
-      } 
+        std::cerr << "Error in converting the R VALUES: " << line << std::endl;
+        exit(-1);
+      }
+    }
+    else if (line.find("[LOCAL_ASSOCIATION_COST]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
+      {
+        assocCost = strtof(line.c_str(), nullptr);
+      }
+      catch (...)
+      {
+        std::cerr << "Error in converting the LOCAL_ASSOCIATION_COST: " << line << std::endl;
+        exit(-1);
+      }
+    }
+    else if (line.find("[GLOBAL_ASSOCIATION_COST]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
+      {
+        global_assocCost = strtof(line.c_str(), nullptr);
+      }
+      catch (...)
+      {
+        std::cerr << "Error in converting the GLOBAL_ASSOCIATION_COST: " << line << std::endl;
+        exit(-1);
+      }
+    }
+    else if (line.find("[DT]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
+      {
+        dt = strtof(line.c_str(), nullptr);
+      }
+      catch (...)
+      {
+        std::cerr << "Error in converting the DT: " << line << std::endl;
+        exit(-1);
+      }
+    }
+    else if (line.find("[MAX_MISSED_RATE]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
+      {
+        max_missed_rate = strtol(line.c_str(), nullptr, 10);
+      }
+      catch (...)
+      {
+        std::cerr << "Error in converting the MAX_MISSED_RATE: " << line << std::endl;
+        exit(-1);
+      }
+    }
+    else if (line.find("[MIN_ACCPETANCE_RATE]") != std::string::npos)
+    {
+      std::getline(file, line);
+      try
+      {
+        min_acceptance_rate = strtol(line.c_str(), nullptr, 10);
+      }
+      catch (...)
+      {
+        std::cerr << "Error in converting the MIN_ACCPETANCE_RATE: " << line << std::endl;
+        exit(-1);
+      }
+    }
+    else
+    {
+      std::cerr << "Option: " << line << " does not exist!" << std::endl;
+      exit(-1);
+    }
   }
- 
+
   file.close();
-  
-  
+
+
   std::cout << "**************" << std::endl;
   std::cout << "****PARAMS****" << std::endl;
   std::cout << "**************" << std::endl;
@@ -246,5 +246,4 @@ void TrackerParam::read(const std::string& filename)
   std::cout << "[LOCAL_ASSOCIATION_COST]: " << assocCost << std::endl;
   std::cout << "[GLOBAL_ASSOCIATION_COST]: " << global_assocCost << std::endl;
   std::cout << "**************" << std::endl;
-  
 }

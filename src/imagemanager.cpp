@@ -43,21 +43,25 @@
 std::vector<std::string> ImageManager::getAllFilesInFolder(const std::string& path) const
 {
 #ifdef _WINDOWS
-    std::vector<std::string> names;
-    auto search_path = path + "/*.*";
-    WIN32_FIND_DATA fd;
-    const auto hFind = ::FindFirstFile(search_path.c_str(), &fd);
-    if (hFind != INVALID_HANDLE_VALUE) {
-        do {
-            // read all (real) files in current folder
-            // , delete '!' read other 2 default folder . and ..
-            if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
-                names.emplace_back(path+fd.cFileName);
-            }
-        } while (::FindNextFile(hFind, &fd));
-        ::FindClose(hFind);
+  std::vector<std::string> names;
+  auto search_path = path + "/*.*";
+  WIN32_FIND_DATA fd;
+  const auto hFind = ::FindFirstFile(search_path.c_str(), &fd);
+  if (hFind != INVALID_HANDLE_VALUE)
+  {
+    do
+    {
+      // read all (real) files in current folder
+      // , delete '!' read other 2 default folder . and ..
+      if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+      {
+        names.emplace_back(path + fd.cFileName);
+      }
     }
-    return names;
+    while (::FindNextFile(hFind, &fd));
+    ::FindClose(hFind);
+  }
+  return names;
 #elif
      DIR *dir;
      try
@@ -77,29 +81,31 @@ std::vector<std::string> ImageManager::getAllFilesInFolder(const std::string& pa
      }
 #endif
 }
-ImageManager::ImageManager(const std::string &dir)
-{
-    fileNames = getAllFilesInFolder(dir);
 
-    assert(!fileNames.empty());
-    sorting(fileNames);
-    currentFrameIndex = 0;
+ImageManager::ImageManager(const std::string& dir)
+{
+  fileNames = getAllFilesInFolder(dir);
+
+  assert(!fileNames.empty());
+  sorting(fileNames);
+  currentFrameIndex = 0;
 }
 
 void ImageManager::sorting(std::vector<std::string>& data) const
 {
-    std::sort(data.begin(), data.end(), natural_sort);
+  std::sort(data.begin(), data.end(), natural_sort);
 }
 
-std::string ImageManager::getNext(const int &speed) {
-    auto currentFile = fileNames[currentFrameIndex];
-    if(currentFrameIndex + speed > fileNames.size())
-    {
-        currentFrameIndex = fileNames.size();
-    }
-    else
-    {
-        currentFrameIndex += speed;
-    }
-    return currentFile;
+std::string ImageManager::getNext(const int& speed)
+{
+  auto currentFile = fileNames[currentFrameIndex];
+  if (currentFrameIndex + speed > fileNames.size())
+  {
+    currentFrameIndex = fileNames.size();
+  }
+  else
+  {
+    currentFrameIndex += speed;
+  }
+  return currentFile;
 }

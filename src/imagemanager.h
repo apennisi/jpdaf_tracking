@@ -44,33 +44,33 @@
 
 class ImageManager
 {
-    public:
-        /**
-        * \brief Create a new object ImageManager
-        *
-        * \param dir: directory path
-        *
-        */
-        explicit ImageManager(const std::string &dir);
+public:
+  /**
+  * \brief Create a new object ImageManager
+  *
+  * \param dir: directory path
+  *
+  */
+  explicit ImageManager(const std::string& dir);
 
-        /**
-         * \brief Return the next image
-         *
-         * \return return the next image
-         *
-         */
-        std::string getNext(const int &speed);
-    private:
-        /**
-         * \brief Sort the file names according to the natural sort algorithm
-         *
-         * \param data: the vector containing the names of the files
-         *
-         */
-        void sorting(std::vector<std::string>& data) const;
-        std::vector<std::string> getAllFilesInFolder(const std::string& path) const;
-        size_t currentFrameIndex;
-        std::vector<std::string> fileNames;
+  /**
+   * \brief Return the next image
+   *
+   * \return return the next image
+   *
+   */
+  std::string getNext(const int& speed);
+private:
+  /**
+   * \brief Sort the file names according to the natural sort algorithm
+   *
+   * \param data: the vector containing the names of the files
+   *
+   */
+  void sorting(std::vector<std::string>& data) const;
+  std::vector<std::string> getAllFilesInFolder(const std::string& path) const;
+  size_t currentFrameIndex;
+  std::vector<std::string> fileNames;
 };
 
 #endif // IMAGEMANAGER_H

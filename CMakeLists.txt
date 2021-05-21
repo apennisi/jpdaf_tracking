@@ -20,8 +20,6 @@ else(HAVE_FILESYSTEM)
     message("Do not found filesystem header")
 endif(HAVE_FILESYSTEM)
 
-set(EXECUTABLE_OUTPUT_PATH ../bin)
-
 include_directories( src )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 include_directories(${EIGEN3_INCLUDE_DIR})
@@ -29,4 +27,5 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 file(GLOB_RECURSE tracker_SRC "src/*.cpp")
 file(GLOB_RECURSE tracker_INC "src/*.h")
 add_executable(${execName} ${tracker_SRC} ${tracker_INC})
-TARGET_LINK_LIBRARIES( ${execName} ${OpenCV_LIBS} )
+
+TARGET_LINK_LIBRARIES( ${execName} ${OpenCV_LIBS} stdc++fs)

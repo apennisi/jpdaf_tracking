@@ -15,8 +15,7 @@ void Tracker::drawTracks(cv::Mat &_img) const
       const cv::Point& p = track->getLastPrediction();
       cv::circle(_img, p, 8, track->getColor(), -1);
       //cv::ellipse(img, p, cv::Size(25, 50), 0, 0, 360, track->getColor(), 3);
-      cv::putText(_img, ss.str(), p, cv::FONT_HERSHEY_SIMPLEX,
-		0.50, cv::Scalar(0, 255, 0), 2, CV_AA);
+      cv::putText(_img, ss.str(), p, cv::FONT_HERSHEY_SIMPLEX, 0.50, cv::Scalar(0, 255, 0), 2, cv::LINE_AA);
     }
   }
 }

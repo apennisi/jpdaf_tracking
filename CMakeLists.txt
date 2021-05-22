@@ -11,6 +11,10 @@ find_package(OpenCV REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 
+if (MSVC)
+    add_definitions(-D_USE_MATH_DEFINES -DNOMINMAX -D_ENABLE_EXTENDED_ALIGNED_STORAGE)
+endif(MSVC)
+
 include(CheckIncludeFileCXX)
 check_include_file_cxx(filesystem HAVE_FILESYSTEM)
 if(HAVE_FILESYSTEM)
@@ -28,4 +32,10 @@ file(GLOB_RECURSE tracker_SRC "src/*.cpp")
 file(GLOB_RECURSE tracker_INC "src/*.h")
 add_executable(${execName} ${tracker_SRC} ${tracker_INC})
 
-TARGET_LINK_LIBRARIES( ${execName} ${OpenCV_LIBS} stdc++fs)
+if (MSVC)
+    set(LIBS ${OpenCV_LIBS})
+else(MSVC)
+    set(LIBS ${OpenCV_LIBS} stdc++fs)
+endif(MSVC)
+
+TARGET_LINK_LIBRARIES(${execName} ${LIBS})
